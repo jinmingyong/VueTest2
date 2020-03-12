@@ -7,6 +7,11 @@ import './assets/css/global.css'
 // 导入字体图标
 import './assets/font_11bu2z7jfowp/iconfont.css'
 
+import axios from 'axios'
+
+axios.defaults.baseURL = ''
+Vue.prototype.$http = axios
+
 Vue.config.productionTip = false
 
 new Vue({
