@@ -49,55 +49,36 @@
 </template>
 
 <script>
-import constantApi from '@/api/constant/employees'
-import {detail,update} from "@/api/base/users"
-import  * as deptApi  from '@/api/base/dept'
-import commonApi from '@/utils/common'
 export default {
   name: 'accountInfo',
   props: ['objId'],
-  data() {
+  data () {
     return {
-      baseData: constantApi,
+      baseData: '',
       inspectionObjectOptions: [],
-      isShowSelect:false,
+      isShowSelect: false,
       formData: {
-        id: this.objId,
+        id: this.objId
       }
     }
   },
   methods: {
-    handleNodeClick(data) {
-      this.formData.departmentName = data.name
-      this.formData.departmentId = data.id
-      this.isShowSelect = false
+    handleNodeClick (data) {
     },
     // 获取详情
-    getObjInfo() {
-      detail({ id: this.objId }).then(res => {
-          this.formData = res.data.data
-      })
+    getObjInfo () {
     },
-    saveData(obj) {
-      update(this.formData)
-        .then(res => {
-          this.formData = res.data
-          this.$message.success('保存成功！')
-          this.getObjInfo()
-      })
-    },
+    saveData (obj) {
+    }
   },
   // 创建完毕状态
-  created: function() {
+  created: function () {
     this.getObjInfo()
-    deptApi.list().then(ret => {
-      this.inspectionObjectOptions = commonApi.transformTozTreeFormat(ret.data.data.depts)
-    })
   }
 }
 </script>
 
-<style rel="stylesheet/scss" lang="scss">
+<style lang="less">
 .el-collapse-item__arrow {
   float: left;
 }
@@ -145,5 +126,5 @@ export default {
 }
 </style>
 
-<style rel="stylesheet/scss" lang="scss" scoped>
+<style lang="less" scoped>
 </style>

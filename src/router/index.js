@@ -1,6 +1,8 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Login from '../components/Login'
+import Add from '../components/add'
+import Details from '../components/details-account-info'
 
 Vue.use(VueRouter)
 
@@ -12,6 +14,14 @@ const routes = [
   {
     path: '/login',
     component: Login
+  },
+  {
+    path: '/add',
+    component: Add
+  },
+  {
+    path: '/details',
+    component: Details
   }
 ]
 

@@ -47,48 +47,26 @@
 </template>
 
 <script>
-import { add, jobnumber } from '@/api/base/users'
-import  * as deptApi  from '@/api/base/dept'
-import employeesData from '@/api/constant/employees'
-import commonApi from '@/utils/common'
-var _this = null
 export default {
-  name: 'add',
-  data() {
+  name: 'Add',
+  data () {
     return {
-      formBase:{},
+      formBase: {},
       dialogFormVisible: false,
       isShowSelect: false,
       depts: [],
-      employeesData : employeesData.hireType,
+      employeesData: ''
     }
   },
   methods: {
-    createData() {
-      add(this.formBase).then(res => {
-        this.$message({message:res.data.message,type:res.data.success?"success":"error"});
-        if(res.data.success) {
-          this.dialogFormVisible = false
-          this.$emit('doQuery', {})
-        }
-      })
-    },
-    handleNodeClick(data) {
-      this.formBase.departmentName = data.name
-      this.formBase.departmentId = data.id
-      this.isShowSelect = false
-    },
   },
   // 创建完毕状态
-  created: function() {
-    deptApi.list().then(ret => {
-      this.depts = commonApi.transformTozTreeFormat(ret.data.data.depts)
-    })
+  created: function () {
   }
 }
 </script>
 
-<style rel="stylesheet/scss" lang="scss">
+<style lang="less" scoped>
 .inputText {
   width: 400px;
   height: 32px;
@@ -103,7 +81,7 @@ export default {
 }
 </style>
 
-<style rel="stylesheet/scss" lang="scss" scoped>
+<style lang="less" scoped>
 .objectTree{
   position: absolute;
   width:300px;
