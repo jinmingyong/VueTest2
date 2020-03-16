@@ -27,8 +27,8 @@ export default {
     return {
       // 表单数据绑定
       loginForm: {
-        username: '123',
-        password: '123'
+        username: 'admin',
+        password: '123456'
       },
       // 表单验证
       loginFormRules: {
@@ -51,10 +51,18 @@ export default {
     },
     login () {
       this.$refs.loginFormRef.validate(async valid => {
-        console.log(valid)
         if (!valid) return
-        const result = await this.$http.post('', this.loginForm)
-        console.log(result)
+        const { data: res } = await this.$http.post('/loginController/login', this.loginForm)
+        console.log(res)
+        if (res.code !== 200) {
+          return this.$message.error(res.msg)
+        }
+        this.$message.success('登陆成功')
+        // 1.将登陆成功后的token保存再seeionStorage中
+        // 2.api必须必须登陆后可用，token只在网站打开生效，所以存在sessionStorage中
+        // 3.跳转网页
+        window.sessionStorage.setItem('token', 'Bearer ' + res.data)
+        await this.$router.push('/home')
       })
     }
   }
