@@ -4,7 +4,8 @@ import Login from '../components/Login'
 import Home from '../components/Home'
 import Add from '../components/add'
 import Details from '../components/details-account-info'
-import Welcome from '../components/Welcome'
+import Welcome from '../views/Welcome'
+import ExpertInfo from '../views/expertManage/ExpertInfo'
 
 Vue.use(VueRouter)
 
@@ -21,10 +22,10 @@ const routes = [
     path: '/home',
     component: Home,
     redirect: '/welcome',
-    children: [{
-      path: '/welcome',
-      component: Welcome
-    }]
+    children: [
+      { path: '/welcome', component: Welcome },
+      { path: '/expertInfo', component: ExpertInfo }
+    ]
   },
   {
     path: '/add',

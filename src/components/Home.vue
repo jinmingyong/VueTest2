@@ -13,8 +13,11 @@
       <!--侧边栏-->
       <el-aside :width="isCollpase ? '64px' :'200px'">
         <div class="toggle-button" @click="toggleCollapse()"><span :class="isCollpase? 'el-icon-s-unfold':'el-icon-s-fold'"></span></div>
-          <el-menu background-color="#407ff6" text-color="#fff" active-text-color="#9EF6BC" unique-opened :collapse="isCollpase"
-                   :collapse-transition="false" router>
+          <el-menu background-color="#a0d3ff" text-color="#1f3d6e" active-text-color="#fbffc4" unique-opened :collapse="isCollpase"
+                   :collapse-transition="false"
+                   router
+                   :default-active="activePath"
+          >
             <!--一级菜单,设置v-for index来确定展开哪个,并且必须加上toSting()转成字符串-->
             <el-submenu :index="item.menuId.toString()" v-for=" item in menulsit" :key="item.menuId">
               <!--一级菜单模板区域-->
@@ -24,7 +27,11 @@
                 <!--文本-->
                 <span>{{item.menuName}}</span>
               </template>
-                <el-menu-item :index="subItem.menuUrl.toString()" v-for="subItem in item.menuDtoList" :key="subItem.menuId">
+
+              <!--二级菜单-->
+                <el-menu-item :index="subItem.menuUrl.toString()" v-for="subItem in item.menuDtoList" :key="subItem.menuId"
+                @click="saveNavState(subItem.menuUrl.toString())"
+                >
                   <!--二级菜单模板区域-->
                   <template slot="title">
                     <!--图标-->
@@ -61,11 +68,14 @@ export default {
         5: 'icon-Customermanagement-fill',
         13: 'icon-kehupandian'
       },
-      isCollpase: false
+      isCollpase: false,
+      // 被激活的链接地址
+      activePath: ''
     }
   },
   created () {
     this.getMenuList()
+    this.activePath = window.sessionStorage.getItem('activePath ')
   },
   methods: {
     logout() {
@@ -81,6 +91,11 @@ export default {
     // 菜单折叠
     toggleCollapse() {
       this.isCollpase = !this.isCollpase
+    },
+    // 保存连接的激活状态
+    saveNavState(activePath) {
+      window.sessionStorage.setItem('activePath', activePath)
+      this.activePath = activePath
     }
   }
 }
@@ -89,9 +104,11 @@ export default {
 <style lang="less" scoped>
   .home-container {
     height: 100%;
+    padding-left: 2px;
   }
 
   .el-header {
+    border-radius: 5px;
     background-color: #00bef6;
     display: flex;
     justify-content: space-between;
@@ -99,6 +116,10 @@ export default {
     align-items: center;
     color: #dddddd;
     font-size: 20px;
+    box-shadow: 3px 3px 10px #0172ad;
+    margin-bottom: 10px;
+    margin-left: 2px;
+    margin-right: 3px;
     > div {
       display: flex;
       align-items: center;
@@ -109,13 +130,17 @@ export default {
   }
 
   .el-aside {
-    background-color: #407ff6;
+    transition:width 0.5s;
+    background-color: #a0d3ff;
+    box-shadow: 3px 0 5px #7aa0c3;
+    border-radius: 3px;
+    margin-right: 10px;
     .el-menu{
       //解决不齐
       border-right:none;
       .iconfont{
         font-size: 25px;
-        color: #4434af;
+        color: #172b85;
         margin-right: 10px;
       }
     }
@@ -126,7 +151,7 @@ export default {
   }
 
   .toggle-button{
-    background-color: #b3d4fc;
+    background-color: #6799fc;
     font-size: 20px;
     line-height: 30px;
     color: white;

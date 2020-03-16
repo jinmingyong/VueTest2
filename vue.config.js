@@ -5,15 +5,6 @@ module.exports = {
   // 部署生产环境和开发环境下的URL。
   // 默认情况下，Vue CLI 会假设你的应用是被部署在一个域名的根路径上
   // 例如 https://www.my-app.com/。如果应用被部署在一个子路径上，你就需要用这个选项指定这个子路径。例如，如果你的应用被部署在 https://www.my-app.com/my-app/，则设置 baseUrl 为 /my-app/。
-  publicPath: process.env.NODE_ENV === 'production' ? './' : '/',
-  assetsDir: './',
-  css: {
-    loaderOptions: {
-      scss: {
-        prependData: '@import "~@/styles/app/variable/index.scss";'
-      }
-    }
-  },
 
   // outputDir: 在npm run build 或 yarn build 时 ，生成文件的目录名称（要和baseUrl的生产环境路径一致）
   // outputDir: "dist",
@@ -47,25 +38,5 @@ module.exports = {
     https: false, // https:{type:Boolean}
     open: true, // 配置自动启动浏览器
     // proxy: 'http://localhost:4000' // 配置跨域处理,只有一个代理
-
-    // 配置多个代理
-    proxy: {
-      '/api': {
-        target: 'http://localhost:8080',
-        ws: true,
-        changOrigin: true,
-        pathRewrite: {
-          '^/api': '/'
-        }
-      },
-      '/online': {
-        target: 'http://10.96.129.56:8081/zhny2',
-        ws: true,
-        changOrigin: true,
-        pathRewrite: {
-          '^/online': '/'
-        }
-      }
-    }
   }
 }
