@@ -11,12 +11,12 @@
     <!--搜索框区域-->
     <el-row :gutter="20">
       <el-col :span="8" style="position: absolute;right: 1%" >
-        <el-input placeholder="请输入内容" class="input-with-select">
-          <el-button slot="append" icon="el-icon-search"></el-button>
+        <el-input placeholder="请输入内容" class="input-with-select" v-model="queryInfo.name" clearable @clear="getExpertList">
+          <el-button slot="append" icon="el-icon-search" @click="getExpertList"></el-button>
         </el-input>
       </el-col>
       <el-col :span="4">
-        <el-button type="primary">添加专家</el-button>
+        <el-button type="primary" @click="addDialogVisible=true">添加专家</el-button>
       </el-col>
     </el-row>
     <el-table :data="expertList" stripe :header-cell-style="{ 'font-size':'15px'}" style="width: 100%">
@@ -93,6 +93,7 @@
           v-model="scope.row.status"
           active-value="1"
           inactive-value="0"
+          @change="userStateChange(scope.row)"
           />
         </template>
       </el-table-column>
@@ -121,6 +122,20 @@
       :total="total">
     </el-pagination>
   </el-card>
+
+  <!--添加用户的对话框-->
+  <el-dialog title="添加专家" :visible.sync="addDialogVisible">
+    <!--主体-->
+    <el-form :model="addForm" :rules="addFormRules">
+      <el-form-item label="姓名" prop="name">
+        <el-input v-model="addForm.name" />
+      </el-form-item>
+    </el-form>
+    <div slot="footer" class="dialog-footer">
+      <el-button @click="addDialogVisible = false">取 消</el-button>
+      <el-button type="primary" @click="addDialogVisible = false">确 定</el-button>
+    </div>
+  </el-dialog>
 </div>
 </template>
 
@@ -130,11 +145,24 @@ export default {
   data() {
     return {
       queryInfo: {
+        name: '',
         pageNum: 1,
         pageSize: 2
       },
       expertList: [],
-      total: 0
+      total: 0,
+      // 控制添加用户对话框的显示
+      addDialogVisible: false,
+      // 添加表单数据
+      addForm: {
+        name: ''
+      },
+      addFormRules: {
+        name: [
+          { required: true, message: '请输入用户名', trigger: 'blur' },
+          { min: 1, max: 10, message: '姓名长度为1到10之间', trigger: 'blur' }
+        ]
+      }
     }
   },
   created () {
@@ -159,6 +187,18 @@ export default {
       // console.log(newCurrPage)
       this.queryInfo.pageNum = newCurrPage
       this.getExpertList()
+    },
+    // 状态改变
+    async userStateChange(expertInfo) {
+      console.log(expertInfo)
+      const { data: res } = await this.$http.put('/commonExpertInfoController/updateById', {
+        expertId: expertInfo.expertId,
+        status: expertInfo.status
+      })
+      if (res.code !== 200) {
+        expertInfo.status = !expertInfo.status
+        return this.$message.error('修改状态失败')
+      }
     }
   }
 }
