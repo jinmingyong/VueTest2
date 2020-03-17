@@ -12,3 +12,11 @@ body,
 .el-card{
     box-shadow: 0 2px 2px #8f8f8f !important;
 }
+.el-table{
+    margin-top: 15px;
+}
+.el-pagination{
+    margin-top: 20px;
+    float: right;
+    margin-bottom: 20px;
+}

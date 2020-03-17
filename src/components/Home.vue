@@ -148,6 +148,7 @@ export default {
 
   .el-main {
     background-color: #e1edf5;
+    border-radius: 3px;
   }
 
   .toggle-button{
