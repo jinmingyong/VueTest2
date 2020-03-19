@@ -7,6 +7,8 @@ import './plugins/element.js'
 import './assets/css/global.css'
 // 导入字体图标
 import './assets/font_11bu2z7jfowp/iconfont.css'
+// 导入sweetalert2
+import VueSweetAlert2 from './plugins/sweetalert2'
 
 import axios from 'axios'
 // 配置请求根路径
@@ -16,10 +18,10 @@ axios.interceptors.request.use(config => {
   config.headers.Authorization = window.sessionStorage.getItem('token')
   return config
 })
+
 Vue.prototype.$http = axios
-
+Vue.use(VueSweetAlert2)
 Vue.config.productionTip = false
-
 new Vue({
   router,
   render: h => h(App)

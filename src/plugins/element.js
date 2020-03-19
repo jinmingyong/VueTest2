@@ -27,7 +27,8 @@ import {
   Option,
   Radio,
   DatePicker,
-  Upload
+  Upload,
+  Image
 
 } from 'element-ui'
 
@@ -58,4 +59,5 @@ Vue.use(Option)
 Vue.use(Radio)
 Vue.use(DatePicker)
 Vue.use(Upload)
+Vue.use(Image)
 Vue.prototype.$message = Message

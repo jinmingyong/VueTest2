@@ -4,7 +4,7 @@
           <div class="avatar_box">
             <img src="../assets/logo.png" alt="">
           </div>
-        <el-form ref="loginFormRef" :model="loginForm" :rules="loginFormRules" label-width="0px" class="login_form">
+        <el-form ref="loginFormRef" :model="loginForm" :rules="loginFormRules" label-width="0px" class="login_form" status-icon>
           <el-form-item prop="username">
             <el-input v-model="loginForm.username" prefix-icon="iconfont icon-account" ></el-input>
           </el-form-item>
