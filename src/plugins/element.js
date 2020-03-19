@@ -24,7 +24,10 @@ import {
   Pagination,
   Dialog,
   Select,
-  Option
+  Option,
+  Radio,
+  DatePicker,
+  Upload
 
 } from 'element-ui'
 
@@ -52,4 +55,7 @@ Vue.use(Pagination)
 Vue.use(Dialog)
 Vue.use(Select)
 Vue.use(Option)
+Vue.use(Radio)
+Vue.use(DatePicker)
+Vue.use(Upload)
 Vue.prototype.$message = Message
