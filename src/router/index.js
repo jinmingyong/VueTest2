@@ -6,6 +6,7 @@ import Add from '../components/add'
 import Details from '../components/details-account-info'
 import Welcome from '../views/Welcome'
 import ExpertInfo from '../views/expertManage/ExpertInfo'
+import ProjectInfo from '../views/projectManage/ProjectInfo'
 
 Vue.use(VueRouter)
 
@@ -24,7 +25,8 @@ const routes = [
     redirect: '/welcome',
     children: [
       { path: '/welcome', component: Welcome },
-      { path: '/expertInfo', component: ExpertInfo }
+      { path: '/expertInfo', component: ExpertInfo },
+      { path: '/projectInfo', component: ProjectInfo }
     ]
   },
   {

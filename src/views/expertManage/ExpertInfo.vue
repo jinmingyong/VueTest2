@@ -70,12 +70,17 @@
             <span>{{ props.row.city }}</span>
           </el-form-item>
           </div>
-          <div style="display: inline-block;width: 20%;height: 300px;position: absolute;top: 5%;">
-            <el-form-item label="个人照片" style="width: 100%">
-              <el-image :src="'http://localhost:8082/pic/'+props.row.picture" style="width: 200px;height: 200px" />
-            </el-form-item>
-            <el-form-item label="评价分数" style="position: absolute;bottom: 0;width: 100%;left: 0;">
-              <div style="display: inline-block;width: 50px;height: 50px">1111<span>{{ props.row.estimate }}</span></div>
+          <div style="display: inline-block;width: 20%;height: 250px;position: absolute;top: 5%;">
+            <el-form-item label="个人照片" style="width: 80%">
+              <el-image :src="'http://localhost:8082/pic/'+props.row.picture" style="width: 150px;height: 150px" />
+              <el-rate
+                disabled
+                show-score
+                v-model="props.row.estimate"
+                :colors="['#99A9BF', '#F7BA2A', '#FF9900']"
+                style="text-align: center"
+              >
+              </el-rate>
             </el-form-item>
           </div>
         </el-form>
@@ -102,13 +107,10 @@
           <!--提示-->
           <el-tooltip effect="dark" content="编辑" placement="top" :enterable="false">
             <!--操作按钮-->
-            <el-button type="primary" icon="el-icon-edit" size="mini" @click="showEditDialog(scope.row)"/>
+            <el-button type="primary" icon="el-icon-edit" size="mini" @click="showEditDialog(scope.row.expertId)"/>
           </el-tooltip>
-          <el-tooltip effect="dark" content="编辑" placement="top" :enterable="false">
+          <el-tooltip effect="dark" content="删除" placement="top" :enterable="false">
           <el-button type="danger" icon="el-icon-delete" size="mini" @click="deleteExpert(scope.row.expertId)"/>
-          </el-tooltip>
-          <el-tooltip effect="dark" content="编辑" placement="top" :enterable="false">
-          <el-button type="primary" icon="el-icon-edit" size="mini"/>
           </el-tooltip>
         </template>
       </el-table-column>
@@ -164,7 +166,6 @@
           action="#"
           :http-request="myUpload"
           :show-file-list="false"
-          :on-success="handleAvatarSuccess"
           :before-upload="beforeAvatarUpload">
           <img v-if="imageUrl" :src="imageUrl" class="avatar">
           <i v-else class="el-icon-plus avatar-uploader-icon"/>
@@ -174,6 +175,9 @@
       </el-row>
       <el-form-item label="民族" prop="nation">
         <el-input v-model="addForm.nation" />
+      </el-form-item>
+      <el-form-item label="所在城市" prop="city">
+        <area-cascader type='text' v-model='addForm.city' :data="pca" v-if="show"></area-cascader>
       </el-form-item>
       <el-form-item label="身份证号" prop="icCard">
         <el-input v-model="addForm.icCard" />
@@ -210,9 +214,6 @@
       </el-form-item>
       <el-form-item label="电子邮箱" prop="email">
         <el-input v-model="addForm.email" />
-      </el-form-item>
-      <el-form-item label="所在城市" prop="city">
-        <el-input v-model="addForm.city" />
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
@@ -258,7 +259,6 @@
               action="#"
               :http-request="myUpload"
               :show-file-list="false"
-              :on-success="handleAvatarSuccess"
               :before-upload="beforeAvatarUpload">
               <el-image v-if="imageUrl" :src="imageUrl" class="avatar"/>
               <el-image v-else>
@@ -272,6 +272,9 @@
       </el-row>
       <el-form-item label="民族" prop="nation">
         <el-input v-model="editForm.nation" />
+      </el-form-item>
+      <el-form-item label="所在城市" prop="city">
+        <area-cascader type='text' v-model='editForm.city' :data="pca" v-if="show"></area-cascader>
       </el-form-item>
       <el-form-item label="身份证号" prop="icCard">
         <el-input v-model="editForm.icCard" disabled/>
@@ -309,9 +312,6 @@
       <el-form-item label="电子邮箱" prop="email">
         <el-input v-model="editForm.email" />
       </el-form-item>
-      <el-form-item label="所在城市" prop="city">
-        <el-input v-model="editForm.city" />
-      </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
       <el-button @click="editDialogVisible = false">取 消</el-button>
@@ -320,8 +320,9 @@
   </el-dialog>
 </div>
 </template>
-
 <script>
+import 'vue-area-linkage/dist/index.css'// v2 or higher
+import { pca } from 'area-data'
 export default {
   name: 'expertInfo',
   data() {
@@ -371,6 +372,10 @@ export default {
         pageNum: 1,
         pageSize: 3
       },
+      // 区域数据
+      pca: pca,
+      // 解决区域选择器bug
+      show: true,
       expertList: [],
       total: 0,
       imageUrl: '',
@@ -489,8 +494,7 @@ export default {
           { validator: checkEmail, trigger: 'blur' }
         ],
         city: [
-          { required: true, message: '请输入所在城市', trigger: 'blur' },
-          { min: 1, max: 10, message: '长度为1到10之间', trigger: 'blur' }
+          { required: true, message: '请选择所在城市', trigger: 'blur' }
         ]
       },
       editFormRules: {
@@ -553,8 +557,7 @@ export default {
           { validator: checkEmail, trigger: 'blur' }
         ],
         city: [
-          { required: true, message: '请输入所在城市', trigger: 'blur' },
-          { min: 1, max: 10, message: '长度为1到10之间', trigger: 'blur' }
+          { required: true, message: '请选择所在城市', trigger: 'blur' }
         ]
       }
     }
@@ -565,7 +568,6 @@ export default {
   methods: {
     async getExpertList () {
       const { data: res } = await this.$http.get('/commonExpertInfoController/selectAllForPage', { params: this.queryInfo })
-      console.log(res)
       if (res.code !== 200) return this.$message.error('获取专家列表失败')
       this.expertList = res.data.dataList
       this.total = res.data.total
@@ -599,10 +601,8 @@ export default {
       const formData = new FormData()
       formData.set('upload', fileObj.file)
       const { data: res } = await this.$http.post('/commonExpertInfoController/uploadHead', formData)
-      this.imageUrl = res.data
-    },
-    handleAvatarSuccess (res, file) {
-      this.imageUrl = URL.createObjectURL(file.raw)
+      this.imageUrl = 'http://localhost:8082/pic/' + res.data
+      console.log(this.imageUrl)
     },
     beforeAvatarUpload (file) {
       const isJPG = file.type === 'image/jpeg'
@@ -619,16 +619,21 @@ export default {
     // 监听添加对话框关闭操作
     addDialogClosed () {
       // 重置表单
+      this.show = false
+      setTimeout(() => { this.show = true }, 0)
+      this.addForm.city = ''
       this.$refs.addFormRef.resetFields()
     },
     editDialogClosed () {
       // 重置表单
       this.$refs.editFormRef.resetFields()
+      this.editForm.city = ''
     },
     // 添加专家信息
     addExpert () {
       this.$refs.addFormRef.validate(async valid => {
         if (!valid) return
+        this.addForm.city = this.addForm.city.toString()
         const { data: res } = await this.$http.post('/commonExpertInfoController/insert', this.addForm)
         if (res.code !== 200) {
           this.$message.error('添加失败')
@@ -640,15 +645,25 @@ export default {
       })
     },
     // 显示编辑信息对话框
-    showEditDialog (expertInfo) {
+    async showEditDialog (expertId) {
+      this.show = false
       this.editDialogVisible = true
-      this.editForm = expertInfo
+      const { data: res } = await this.$http.get('/commonExpertInfoController/selectById/' + expertId)
+      if (res.code !== 200) {
+        this.$message.error('查找失败')
+      }
+      this.show = true
+      res.data.city = res.data.city.split(',')
+      this.editForm = res.data
       this.imageUrl = 'http://localhost:8082/pic/' + this.editForm.picture
     },
     // 更新专家
     updateExpert () {
       this.$refs.editFormRef.validate(async valid => {
         if (!valid) return
+        // 截取地址后的图片名
+        this.editForm.picture = this.imageUrl.substr(26)
+        this.editForm.city = this.editForm.city.toString()
         const { data: res } = await this.$http.put('/commonExpertInfoController/updateById', this.editForm)
         if (res.code !== 200) {
           this.$message.error('更新失败')

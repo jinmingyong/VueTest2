@@ -28,7 +28,14 @@ import {
   Radio,
   DatePicker,
   Upload,
-  Image
+  Image,
+  Rate,
+  Avatar,
+  Dropdown,
+  DropdownMenu,
+  DropdownItem,
+  Divider,
+  Cascader
 
 } from 'element-ui'
 
@@ -60,4 +67,11 @@ Vue.use(Radio)
 Vue.use(DatePicker)
 Vue.use(Upload)
 Vue.use(Image)
+Vue.use(Rate)
+Vue.use(Avatar)
+Vue.use(DropdownItem)
+Vue.use(DropdownMenu)
+Vue.use(Dropdown)
+Vue.use(Divider)
+Vue.use(Cascader)
 Vue.prototype.$message = Message

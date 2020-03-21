@@ -20,7 +20,16 @@ body,
     float: right;
     margin-bottom: 20px;
 }
+.el-menu{
+    border-right:none;
+}
 /*消除sweetAlert2的弹窗bug*/
 .swal2-shown{
     height: 100% !important;
+}
+.el-cascader-menu {
+    height: 300px;
+}
+.area-select.large{
+    line-height: 20px;
 }

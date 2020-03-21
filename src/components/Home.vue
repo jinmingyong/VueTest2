@@ -6,7 +6,15 @@
        <img src="../assets/logo.png" alt="">
         <span>专家库管理系统</span>
       </div>
-      <el-button type="info" @click="logout">退出</el-button>
+      <el-dropdown  @command="handleCommand"  placement="bottom">
+      <el-avatar class="iconfont icon-bussiness-man-fill" style="font-size: 25px"></el-avatar>
+        <el-dropdown-menu slot="dropdown" style="width: 150px;text-align: center">
+          <el-dropdown-item disabled style="margin-top: 10px"><span style="color: #00bef6;font-weight: bold">{{userName}}!您好</span></el-dropdown-item>
+          <el-divider><i class="iconfont icon-contacts"></i></el-divider>
+          <el-dropdown-item v-for=" item in menulistForPre" :key="item.menuId" :command="item.menuUrl.toString()"><i :class="'iconfont '+iconsObj[item.menuId]" style="font-size: 25px; vertical-align: middle"></i>{{item.menuName}}</el-dropdown-item>
+          <el-dropdown-item divided command="logout"><i class="iconfont icon-logout" style="font-size: 20px; vertical-align: middle"></i>退出</el-dropdown-item>
+        </el-dropdown-menu>
+      </el-dropdown>
     </el-header>
     <!--页面主体区域-->
     <el-container>
@@ -19,7 +27,7 @@
                    :default-active="activePath"
           >
             <!--一级菜单,设置v-for index来确定展开哪个,并且必须加上toSting()转成字符串-->
-            <el-submenu :index="item.menuId.toString()" v-for=" item in menulsit" :key="item.menuId">
+            <el-submenu :index="item.menuId.toString()"  v-for=" item in menulist" :key="item.menuId">
               <!--一级菜单模板区域-->
               <template slot="title">
                 <!--图标-->
@@ -59,14 +67,19 @@ export default {
   data() {
     return {
       // 左侧菜单
-      menulsit: [],
+      userName: '',
+      menulist: [],
+      menulistForPre: [],
       iconsObj: {
         1: 'icon-fencengpeizhi',
         2: 'icon-bussiness-man',
         3: 'icon-feeds',
         4: 'icon-usercenter',
         5: 'icon-Customermanagement-fill',
-        13: 'icon-kehupandian'
+        13: 'icon-kehupandian',
+        14: 'icon-usercenter',
+        15: 'icon-password',
+        16: 'icon-messagecenter'
       },
       isCollpase: false,
       // 被激活的链接地址
@@ -86,7 +99,15 @@ export default {
       const { data: res } = await this.$http.post('/menuResourceManagementController/getUserInfoAndMenu')
       console.log(res)
       if (res.code !== 200) return this.$message.error(res.msg)
-      this.menulsit = res.data.menuDtoList
+      this.userName = res.data.userName
+      const list = res.data.menuDtoList
+      for (let i = 0; i < list.length; i++) {
+        if (list[i].menuId === 4) {
+          this.menulistForPre = list[i].menuDtoList
+        } else {
+          this.menulist.push(list[i])
+        }
+      }
     },
     // 菜单折叠
     toggleCollapse() {
@@ -96,6 +117,13 @@ export default {
     saveNavState(activePath) {
       window.sessionStorage.setItem('activePath', activePath)
       this.activePath = activePath
+    },
+    handleCommand(command) {
+      if (command === 'logout') {
+        this.logout()
+      } else {
+        this.$router.push(command)
+      }
     }
   }
 }
@@ -113,6 +141,7 @@ export default {
     display: flex;
     justify-content: space-between;
     padding-left: 0;
+    padding-right: 50px;
     align-items: center;
     color: #dddddd;
     font-size: 20px;
@@ -123,7 +152,7 @@ export default {
     > div {
       display: flex;
       align-items: center;
-      span {
+     + span {
           margin-left: 15px;
       }
     }
@@ -137,7 +166,6 @@ export default {
     margin-right: 10px;
     .el-menu{
       //解决不齐
-      border-right:none;
       .iconfont{
         font-size: 25px;
         color: #172b85;
