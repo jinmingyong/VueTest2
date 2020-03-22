@@ -105,11 +105,11 @@
       <el-table-column label="操作" width="200px">
         <template slot-scope="scope">
           <!--提示-->
-          <el-tooltip effect="dark" content="编辑" placement="top" :enterable="false">
+          <el-tooltip effect="dark" content="编辑" placement="top" :enterable="false" :open-delay="700">
             <!--操作按钮-->
             <el-button type="primary" icon="el-icon-edit" size="mini" @click="showEditDialog(scope.row.expertId)"/>
           </el-tooltip>
-          <el-tooltip effect="dark" content="删除" placement="top" :enterable="false">
+          <el-tooltip effect="dark" content="删除" placement="top" :enterable="false" :open-delay="700">
           <el-button type="danger" icon="el-icon-delete" size="mini" @click="deleteExpert(scope.row.expertId)"/>
           </el-tooltip>
         </template>
@@ -186,13 +186,55 @@
         <el-input v-model="addForm.job" />
       </el-form-item>
       <el-form-item label="职称" prop="jobGrade">
-        <el-input v-model="addForm.jobGrade" />
+        <el-select
+          v-model="addForm.jobGrade"
+          ref="addJobGrade"
+          filterable
+          allow-create
+          default-first-option
+          style="width: 200px"
+          placeholder="请选择职称">
+          <el-option
+            v-for="item in jobGradeOption"
+            :key="item.id"
+            :label="item.jobGrade"
+            :value="item.id">
+          </el-option>
+        </el-select>
       </el-form-item>
       <el-form-item label="所属行业" prop="industry">
-        <el-input v-model="addForm.industry" />
+        <el-select
+          v-model="addForm.industry"
+          ref="addIndustry"
+          filterable
+          allow-create
+          default-first-option
+          style="width: 200px"
+          placeholder="请选择行业">
+          <el-option
+            v-for="item in industryOption"
+            :key="item.id"
+            :label="item.industry"
+            :value="item.id">
+          </el-option>
+        </el-select>
       </el-form-item>
       <el-form-item label="工作单位" prop="company">
-        <el-input v-model="addForm.company" />
+        <el-select
+          v-model="addForm.company"
+          ref="addCompany"
+          filterable
+          allow-create
+          default-first-option
+          style="width: 200px"
+          placeholder="请选择单位">
+          <el-option
+            v-for="item in companyOption"
+            :key="item.id"
+            :label="item.company"
+            :value="item.id">
+          </el-option>
+        </el-select>
       </el-form-item>
       <el-form-item label="工作年限" prop="workingYear">
         <el-input v-model="addForm.workingYear" />
@@ -201,7 +243,21 @@
         <el-input v-model="addForm.degree" />
       </el-form-item>
       <el-form-item label="专业类型" prop="major">
-        <el-input v-model="addForm.major" />
+        <el-select
+          v-model="addForm.major"
+          ref="addMajor"
+          filterable
+          allow-create
+          default-first-option
+          style="width: 200px"
+          placeholder="请选择专业">
+          <el-option
+            v-for="item in majorOption"
+            :key="item.id"
+            :label="item.major"
+            :value="item.id">
+          </el-option>
+        </el-select>
       </el-form-item>
       <el-form-item label="毕业学院" prop="college">
         <el-input v-model="addForm.college" />
@@ -283,13 +339,55 @@
         <el-input v-model="editForm.job" />
       </el-form-item>
       <el-form-item label="职称" prop="jobGrade">
-        <el-input v-model="editForm.jobGrade" />
+        <el-select
+          v-model="editForm.jobGrade"
+          ref="editJobGrade"
+          filterable
+          allow-create
+          default-first-option
+          style="width: 200px"
+          placeholder="请选择职称">
+          <el-option
+            v-for="item in jobGradeOption"
+            :key="item.id"
+            :label="item.jobGrade"
+            :value="item.id">
+          </el-option>
+        </el-select>
       </el-form-item>
       <el-form-item label="所属行业" prop="industry">
-        <el-input v-model="editForm.industry" />
+        <el-select
+          v-model="editForm.industry"
+          ref="editIndustry"
+          filterable
+          allow-create
+          default-first-option
+          style="width: 200px"
+          placeholder="请选择行业">
+          <el-option
+            v-for="item in industryOption"
+            :key="item.id"
+            :label="item.industry"
+            :value="item.id">
+          </el-option>
+        </el-select>
       </el-form-item>
       <el-form-item label="工作单位" prop="company">
-        <el-input v-model="editForm.company" />
+        <el-select
+          v-model="editForm.company"
+          ref="editCompany"
+          filterable
+          allow-create
+          default-first-option
+          style="width: 200px"
+          placeholder="请选择单位">
+          <el-option
+            v-for="item in companyOption"
+            :key="item.id"
+            :label="item.company"
+            :value="item.id">
+          </el-option>
+        </el-select>
       </el-form-item>
       <el-form-item label="工作年限" prop="workingYear">
         <el-input v-model="editForm.workingYear" />
@@ -298,7 +396,21 @@
         <el-input v-model="editForm.degree" />
       </el-form-item>
       <el-form-item label="专业类型" prop="major">
-        <el-input v-model="editForm.major" />
+        <el-select
+          v-model="editForm.major"
+          ref="editMajor"
+          filterable
+          allow-create
+          default-first-option
+          style="width: 200px"
+          placeholder="请选择专业">
+          <el-option
+            v-for="item in majorOption"
+            :key="item.id"
+            :label="item.major"
+            :value="item.id">
+          </el-option>
+        </el-select>
       </el-form-item>
       <el-form-item label="毕业学院" prop="college">
         <el-input v-model="editForm.college" />
@@ -376,6 +488,15 @@ export default {
       pca: pca,
       // 解决区域选择器bug
       show: true,
+      // 单位Option
+      companyOption: [],
+      // 行业Option
+      industryOption: [],
+      // 职称Option
+      jobGradeOption: [],
+      // 专业Option
+      majorOption: [],
+      // 专家信息
       expertList: [],
       total: 0,
       imageUrl: '',
@@ -454,20 +575,17 @@ export default {
           { min: 1, max: 10, message: '长度为1到10之间', trigger: 'blur' }
         ],
         jobGrade: [
-          { required: true, message: '请输入职称', trigger: 'blur' },
-          { min: 1, max: 10, message: '长度为1到10之间', trigger: 'blur' }
+          { required: true, message: '请输入职称', trigger: 'blur' }
         ],
         industry: [
-          { required: true, message: '请输入所属行业', trigger: 'blur' },
-          { min: 1, max: 10, message: '长度为1到10之间', trigger: 'blur' }
+          { required: true, message: '请输入所属行业', trigger: 'blur' }
         ],
         workingYear: [
           { required: true, message: '请输入工作年限', trigger: 'blur' },
           { validator: checkInt, trigger: 'blur' }
         ],
         company: [
-          { required: true, message: '请输入工作单位', trigger: 'blur' },
-          { min: 1, max: 10, message: '长度为1到10之间', trigger: 'blur' }
+          { required: true, message: '请输入工作单位', trigger: 'blur' }
         ],
         degree: [
           { required: true, message: '请输入学历', trigger: 'blur' },
@@ -478,8 +596,7 @@ export default {
           { min: 1, max: 10, message: '长度为1到10之间', trigger: 'blur' }
         ],
         major: [
-          { required: true, message: '请输入专业类型', trigger: 'blur' },
-          { min: 1, max: 10, message: '长度为1到10之间', trigger: 'blur' }
+          { required: true, message: '请输入专业类型', trigger: 'blur' }
         ],
         phone: [
           { required: true, message: '请输入手机号', trigger: 'blur' },
@@ -517,20 +634,17 @@ export default {
           { min: 1, max: 10, message: '长度为1到10之间', trigger: 'blur' }
         ],
         jobGrade: [
-          { required: true, message: '请输入职称', trigger: 'blur' },
-          { min: 1, max: 10, message: '长度为1到10之间', trigger: 'blur' }
+          { required: true, message: '请输入职称', trigger: 'blur' }
         ],
         industry: [
-          { required: true, message: '请输入所属行业', trigger: 'blur' },
-          { min: 1, max: 10, message: '长度为1到10之间', trigger: 'blur' }
+          { required: true, message: '请输入所属行业', trigger: 'blur' }
         ],
         workingYear: [
           { required: true, message: '请输入工作年限', trigger: 'blur' },
           { validator: checkInt, trigger: 'blur' }
         ],
         company: [
-          { required: true, message: '请输入工作单位', trigger: 'blur' },
-          { min: 1, max: 10, message: '长度为1到10之间', trigger: 'blur' }
+          { required: true, message: '请输入工作单位', trigger: 'blur' }
         ],
         degree: [
           { required: true, message: '请输入学历', trigger: 'blur' },
@@ -541,8 +655,7 @@ export default {
           { min: 1, max: 10, message: '长度为1到10之间', trigger: 'blur' }
         ],
         major: [
-          { required: true, message: '请输入专业类型', trigger: 'blur' },
-          { min: 1, max: 10, message: '长度为1到10之间', trigger: 'blur' }
+          { required: true, message: '请输入专业类型', trigger: 'blur' }
         ],
         phone: [
           { required: true, message: '请输入手机号', trigger: 'blur' },
@@ -564,6 +677,7 @@ export default {
   },
   created () {
     this.getExpertList()
+    this.getOption()
   },
   methods: {
     async getExpertList () {
@@ -571,6 +685,18 @@ export default {
       if (res.code !== 200) return this.$message.error('获取专家列表失败')
       this.expertList = res.data.dataList
       this.total = res.data.total
+    },
+    // 获得option
+    async getOption () {
+      const { data: res } = await this.$http.get('commonCompanyInfoController/selectAll', { params: { status: 1 } })
+      const { data: res2 } = await this.$http.get('commonIndustryInfoController/selectAll', { params: { status: 1 } })
+      const { data: res3 } = await this.$http.get('commonMajorInfoController/selectAll', { params: { status: 1 } })
+      const { data: res4 } = await this.$http.get('commonJobgradeInfoController/selectAll', { params: { status: 1 } })
+      if (res.code !== 200 || res2.code !== 200 || res3.code !== 200 || res4.code !== 200) return this.$message.error('获取option失败')
+      this.companyOption = res.data
+      this.industryOption = res2.data
+      this.majorOption = res3.data
+      this.jobGradeOption = res4.data
     },
     // 监听pagesize
     handleSizeChange (newPageSize) {
@@ -628,11 +754,36 @@ export default {
       // 重置表单
       this.$refs.editFormRef.resetFields()
       this.editForm.city = ''
+      this.imageUrl = ''
     },
     // 添加专家信息
     addExpert () {
       this.$refs.addFormRef.validate(async valid => {
         if (!valid) return
+        if (this.$refs.addJobGrade.createdLabel !== null) {
+          const { data: res } = await this.$http.post('/commonJobgradeInfoController/insert', { jobGrade: this.$refs.addJobGrade.createdLabel })
+          if (res.code !== 200) { this.$message.error('添加新选项失败') }
+          this.addForm.jobGrade = res.data
+          this.getOption()
+        }
+        if (this.$refs.addCompany.createdLabel !== null) {
+          const { data: res } = await this.$http.post('/commonCompanyInfoController/insert', { company: this.$refs.addCompany.createdLabel })
+          if (res.code !== 200) { this.$message.error('添加新选项失败') }
+          this.addForm.company = res.data
+          this.getOption()
+        }
+        if (this.$refs.addIndustry.createdLabel !== null) {
+          const { data: res } = await this.$http.post('/commonIndustryInfoController/insert', { industry: this.$refs.addIndustry.createdLabel })
+          if (res.code !== 200) { this.$message.error('添加新选项失败') }
+          this.addForm.industry = res.data
+          this.getOption()
+        }
+        if (this.$refs.addMajor.createdLabel !== null) {
+          const { data: res } = await this.$http.post('/commonMajorInfoController/insert', { major: this.$refs.addMajor.createdLabel })
+          if (res.code !== 200) { this.$message.error('添加新选项失败') }
+          this.addForm.major = res.data
+          this.getOption()
+        }
         this.addForm.city = this.addForm.city.toString()
         const { data: res } = await this.$http.post('/commonExpertInfoController/insert', this.addForm)
         if (res.code !== 200) {
@@ -660,6 +811,30 @@ export default {
     // 更新专家
     updateExpert () {
       this.$refs.editFormRef.validate(async valid => {
+        if (this.$refs.editJobGrade.createdLabel !== null) {
+          const { data: res } = await this.$http.post('/commonJobgradeInfoController/insert', { jobGrade: this.$refs.editJobGrade.createdLabel })
+          if (res.code !== 200) { this.$message.error('添加新选项失败') }
+          this.editForm.jobGrade = res.data
+          this.getOption()
+        }
+        if (this.$refs.editCompany.createdLabel !== null) {
+          const { data: res } = await this.$http.post('/commonCompanyInfoController/insert', { company: this.$refs.editCompany.createdLabel })
+          if (res.code !== 200) { this.$message.error('添加新选项失败') }
+          this.editForm.company = res.data
+          this.getOption()
+        }
+        if (this.$refs.editIndustry.createdLabel !== null) {
+          const { data: res } = await this.$http.post('/commonIndustryInfoController/insert', { industry: this.$refs.editIndustry.createdLabel })
+          if (res.code !== 200) { this.$message.error('添加新选项失败') }
+          this.editForm.industry = res.data
+          this.getOption()
+        }
+        if (this.$refs.editMajor.createdLabel !== null) {
+          const { data: res } = await this.$http.post('/commonMajorInfoController/insert', { major: this.$refs.editMajor.createdLabel })
+          if (res.code !== 200) { this.$message.error('添加新选项失败') }
+          this.editForm.major = res.data
+          this.getOption()
+        }
         if (!valid) return
         // 截取地址后的图片名
         this.editForm.picture = this.imageUrl.substr(26)

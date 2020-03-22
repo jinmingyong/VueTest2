@@ -44,11 +44,11 @@
         <el-table-column label="操作" width="200px">
           <template slot-scope="scope">
             <!--提示-->
-            <el-tooltip effect="dark" content="编辑" placement="top" :enterable="false">
+            <el-tooltip effect="dark" content="编辑" placement="top" :enterable="false" :open-delay="700">
               <!--操作按钮-->
               <el-button type="primary" icon="el-icon-edit" size="mini" @click="showEditDialog(scope.row.projectId)"/>
             </el-tooltip>
-            <el-tooltip effect="dark" content="删除" placement="top" :enterable="false">
+            <el-tooltip effect="dark" content="删除" placement="top" :enterable="false" :open-delay="700">
               <el-button type="danger" icon="el-icon-delete" size="mini" @click="deleteProject(scope.row.projectId)"/>
             </el-tooltip>
           </template>
