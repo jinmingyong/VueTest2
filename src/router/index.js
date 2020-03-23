@@ -7,6 +7,11 @@ import Details from '../components/details-account-info'
 import Welcome from '../views/Welcome'
 import ExpertInfo from '../views/expertManage/ExpertInfo'
 import ProjectInfo from '../views/projectManage/ProjectInfo'
+import CompanyInfo from '../views/systemSetting/CompanyInfo'
+import IndustryInfo from '../views/systemSetting/IndustryInfo'
+import JobgradeInfo from '../views/systemSetting/JobgradeInfo'
+import MajorInfo from '../views/systemSetting/MajorInfo'
+import PersonalInfo from '../views/personalManage/PersonalInfo'
 
 Vue.use(VueRouter)
 
@@ -26,7 +31,12 @@ const routes = [
     children: [
       { path: '/welcome', component: Welcome },
       { path: '/expertInfo', component: ExpertInfo },
-      { path: '/projectInfo', component: ProjectInfo }
+      { path: '/projectInfo', component: ProjectInfo },
+      { path: '/companyInfo', component: CompanyInfo },
+      { path: '/industryInfo', component: IndustryInfo },
+      { path: '/jobgradeInfo', component: JobgradeInfo },
+      { path: '/majorInfo', component: MajorInfo },
+      { path: '/personalInfo', component: PersonalInfo }
     ]
   },
   {

@@ -119,11 +119,25 @@ export default {
       this.activePath = activePath
     },
     handleCommand(command) {
-      if (command === 'logout') {
-        this.logout()
-      } else {
-        this.$router.push(command)
+      switch (command) {
+        case 'logout':
+          this.logout()
+          break
+        case '/personalInfo':
+          this.$router.push(command)
+          window.sessionStorage.setItem('tabsValue', 'personalInfo')
+          break
+        case '/modifyPassword':
+          window.sessionStorage.setItem('tabsValue', 'editPassword')
+          this.$router.push('/personalInfo')
+          break
+        case '/messageManage':
+          window.sessionStorage.setItem('tabsValue', 'message')
+          this.$router.push('/personalInfo')
+          break
+        default:
       }
+      location.reload()
     }
   }
 }

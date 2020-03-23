@@ -35,7 +35,10 @@ import {
   DropdownMenu,
   DropdownItem,
   Divider,
-  Cascader
+  Cascader,
+  Tabs,
+  TabPane,
+  Tag
 
 } from 'element-ui'
 
@@ -74,4 +77,7 @@ Vue.use(DropdownMenu)
 Vue.use(Dropdown)
 Vue.use(Divider)
 Vue.use(Cascader)
+Vue.use(Tabs)
+Vue.use(TabPane)
+Vue.use(Tag)
 Vue.prototype.$message = Message

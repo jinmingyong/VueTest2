@@ -13,6 +13,13 @@ import VueSweetAlert2 from './plugins/sweetalert2'
 import VueAreaLinkage from 'vue-area-linkage'
 
 import axios from 'axios'
+
+import Router from 'vue-router'
+
+const routerPush = Router.prototype.push
+Router.prototype.push = function push(location) {
+  return routerPush.call(this, location).catch(error => error)
+}
 // 配置请求根路径
 axios.defaults.baseURL = 'http://localhost:8082/'
 axios.interceptors.request.use(config => {

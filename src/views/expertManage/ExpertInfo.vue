@@ -440,7 +440,7 @@ export default {
   data() {
     // 验证手机号
     var checkPhone = (rule, value, cb) => {
-      const reg = /0?(13|14|15|18|17)[0-9]{9}/
+      const reg = /^(13[0-9]|17[0-9]|14[5|7]|15[0|1|2|3|4|5|6|7|8|9]|18[0|1|2|3|5|6|7|8|9])\d{8}$/
       if (reg.test(value)) {
         return cb()
       }
@@ -448,7 +448,7 @@ export default {
     }
     // 验证邮箱
     var checkEmail = (rule, value, cb) => {
-      const reg = /\w[-\w.+]*@([A-Za-z0-9][-A-Za-z0-9]+\.)+[A-Za-z]{2,14}/
+      const reg = /^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/
       if (reg.test(value)) {
         return cb()
       }
@@ -456,7 +456,7 @@ export default {
     }
     // 验证座机号
     var checkTelPhone = (rule, value, cb) => {
-      const reg = /[0-9-()（）]{7,18}/
+      const reg = /\d{3}-\d{8}|\d{4}-\d{7}/
       if (reg.test(value)) {
         return cb()
       }
@@ -464,7 +464,7 @@ export default {
     }
     // 验证座机号
     var checkCardId = (rule, value, cb) => {
-      const reg = /\d{17}[\d|x]|\d{15}/
+      const reg = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/
       if (reg.test(value)) {
         return cb()
       }
