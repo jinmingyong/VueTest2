@@ -38,7 +38,9 @@ import {
   Cascader,
   Tabs,
   TabPane,
-  Tag
+  Tag,
+  MessageBox,
+  Tree
 
 } from 'element-ui'
 
@@ -80,4 +82,6 @@ Vue.use(Cascader)
 Vue.use(Tabs)
 Vue.use(TabPane)
 Vue.use(Tag)
+Vue.use(Tree)
+Vue.prototype.$confirm = MessageBox.confirm
 Vue.prototype.$message = Message

@@ -57,7 +57,7 @@
           </el-form>
           <el-divider><i class="iconfont icon-save"></i></el-divider>
           <div style="text-align: center;margin-top: 50px">
-            <el-button type="primary" icon="el-icon-edit" @click="updateUser">保存</el-button>
+            <el-button type="primary" icon="el-icon-edit" @click="updatePassword">保存</el-button>
           </div>
         </el-tab-pane>
         <el-tab-pane>
@@ -91,9 +91,6 @@ export default {
       if (value === '') {
         callback(new Error('请输入密码'))
       } else {
-        if (this.editPasswordForm.oldPassword !== '' || this.editPasswordForm.newPassword !== '') {
-          this.$refs.editPasswordFormRef.validateField('checkPass')
-        }
         callback()
       }
     }
@@ -172,6 +169,7 @@ export default {
         default:
       }
     },
+    // 编辑信息
     async updateUser () {
       this.$refs.editFormRef.validate(async valid => {
         if (!valid) return
@@ -179,7 +177,32 @@ export default {
         if (res.code !== 200) {
           this.$message.error('更新失败')
         }
+        this.$message.success('修改成功')
         this.getPersonalInfo()
+      })
+    },
+    // 修改密码
+    async updatePassword() {
+      this.$refs.editFormRef.validate(async valid => {
+        if (!valid) return
+        const { data: res } = await this.$http.put('/personalInfoController/updatePasswordByToken', this.editPasswordForm)
+        if (res.code !== 200) {
+          if (res.msg === '旧密码错误') {
+            this.$refs.editPasswordFormRef.fields[0].validateMessage = res.msg
+            this.$refs.editPasswordFormRef.fields[0].validateState = 'error'
+            return
+          } else {
+            this.$refs.editPasswordFormRef.fields[1].validateMessage = res.msg
+            this.$refs.editPasswordFormRef.fields[1].validateState = 'error'
+            return
+          }
+        }
+        this.$swal(
+          '修改密码成功',
+          '请重新登录',
+          'success'
+        )
+        await this.$router.push('/login')
       })
     }
   }

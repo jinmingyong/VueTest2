@@ -12,6 +12,9 @@ import IndustryInfo from '../views/systemSetting/IndustryInfo'
 import JobgradeInfo from '../views/systemSetting/JobgradeInfo'
 import MajorInfo from '../views/systemSetting/MajorInfo'
 import PersonalInfo from '../views/personalManage/PersonalInfo'
+import UsersInfo from '../views/usersManage/UsersInfo'
+import RolesInfo from '../views/usersManage/RolesInfo'
+import ResourceInfo from '../views/usersManage/ResourceInfo'
 
 Vue.use(VueRouter)
 
@@ -36,7 +39,10 @@ const routes = [
       { path: '/industryInfo', component: IndustryInfo },
       { path: '/jobgradeInfo', component: JobgradeInfo },
       { path: '/majorInfo', component: MajorInfo },
-      { path: '/personalInfo', component: PersonalInfo }
+      { path: '/personalInfo', component: PersonalInfo },
+      { path: '/usersInfo', component: UsersInfo },
+      { path: '/rolesInfo', component: RolesInfo },
+      { path: '/resourceInfo', component: ResourceInfo }
     ]
   },
   {

@@ -71,15 +71,15 @@ export default {
       menulist: [],
       menulistForPre: [],
       iconsObj: {
-        1: 'icon-fencengpeizhi',
+        5: 'icon-fencengpeizhi',
         2: 'icon-bussiness-man',
         3: 'icon-feeds',
-        4: 'icon-usercenter',
-        5: 'icon-Customermanagement-fill',
-        13: 'icon-kehupandian',
-        14: 'icon-usercenter',
-        15: 'icon-password',
-        16: 'icon-messagecenter'
+        6: 'icon-usercenter',
+        7: 'icon-Customermanagement-fill',
+        4: 'icon-kehupandian',
+        16: 'icon-usercenter',
+        17: 'icon-password',
+        18: 'icon-messagecenter'
       },
       isCollpase: false,
       // 被激活的链接地址
