@@ -26,8 +26,14 @@
       </div>
       <el-form :model="addForm" :rules="addFormRules" ref="addFormRef" status-icon
                size="large" label-position="top" label-width="100px" class="addFrom">
-        <el-tabs v-model="activeIndex" tab-position="left" :before-leave="beforeTabLeave" @tab-click="tabClicked">
+        <el-tabs v-model="activeIndex" tab-position="left" :before-leave="beforeTabLeave" @tab-click="tabClicked" style="min-height: 600px">
           <el-tab-pane label="选择项目" name="0" style="padding: 10px 50px">
+            <el-alert
+              title="先选择项目"
+              type="warning"
+              center
+              show-icon
+              :closable="false"></el-alert>
             <el-form-item label="选择项目:" prop="projectId" style="margin-bottom: 50px;text-align: center">
             <el-select
               v-model="addForm.projectId"
@@ -83,13 +89,16 @@
                             v-model="projectForm.proRemark" />
                 </el-form-item>
               </el-row>
-              <el-form-item style="text-align:center">
-                <el-button type="success" round style="width: 300px">下一步</el-button>
-              </el-form-item>
             </el-form>
             </div>
           </el-tab-pane>
           <el-tab-pane label="挑选参数" name="1" class="chooseInfo">
+            <el-alert
+              title="挑选抽取条件"
+              type="success"
+              center
+              show-icon
+              :closable="false"></el-alert>
             <el-form-item label="所在城市" prop="city" style="">
               <el-cascader type='text' v-model='addForm.city' :options="pca" :props="props" collapse-tags clearable  @change="selectLabel('City')"></el-cascader>
             </el-form-item>
@@ -207,9 +216,15 @@
           </el-tab-pane>
           <el-tab-pane label="选择专家" name="2">
             <el-row :gutter="20" style="margin-bottom: 20px">
+              <el-alert
+                title="先选择抽取模式，然后查看专家信息"
+                type="success"
+                center
+                show-icon
+                :closable="false"></el-alert>
               <el-col :span="8">
                 <el-form-item label="选择抽取模式" prop="extractType">
-                  <el-select v-model="addForm.extractType" placeholder="请选择">
+                  <el-select v-model="addForm.extractType" placeholder="请选择" @change="extractTypeChange">
                     <el-option
                       v-for="item in extractTypeList"
                       :key="item.value"
@@ -325,18 +340,52 @@
             </el-pagination>
           </el-tab-pane>
           <el-tab-pane label="查看结果" name="3">
-            <el-form-item label="抽取结果">
-              <template class="self">
+            <el-alert
+              title="选择专家并消息通知"
+              type="success"
+              center
+              show-icon
+              :closable="false">
+            </el-alert>
+            <el-form-item>
                 <el-transfer
-                  filter-placeholder="输入专家名称"
                   v-model="addForm.result"
-                  :data="resultData" style="width: 600px;margin: 20px auto">
+                  :titles="['专家列表', '发送邮件']"
+                  :data="resultData" style="width: 600px;margin: 50px auto">
                 </el-transfer>
-              </template>
+              <el-button round type="primary" style="margin: 20px auto;width: 400px;display: block" @click="showMessageDialog">发送短信</el-button>
             </el-form-item>
           </el-tab-pane>
         </el-tabs>
       </el-form>
+      <el-dialog title="消息模板" :visible.sync="messageDialogVisible" @close="MessageDialogClosed" width="30%">
+        <!--主体-->
+        <el-form :model="messageForm" :rules="messageFormRules" ref="messageFormRef"
+                 size="large" label-position="right" label-width="100px" class="addFrom" status-icon>
+          <el-form-item label="消息模板选择">
+            <el-select v-model="messageForm.messageId" @change="messageChange" placeholder="请选择" style="width: 200px">
+              <el-option
+                v-for="item in systemMessageList"
+                :key="item.messageId"
+                :label="item.mesInfo"
+                :value="item.messageId"
+                style="max-width: 200px"
+              >
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item v-if="messageForm.messageId" label="消息名称" prop="mesInfo">
+            <el-input type="textarea" :autosize="{ minRows: 4, maxRows: 6}"
+                      maxlength="500"
+                      show-word-limit
+                      v-model="messageForm.mesInfo" />
+          </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="messageDialogVisible = false">取 消</el-button>
+          <el-button type="primary" @click="sendSms">确 定</el-button>
+        </div>
+      </el-dialog>
     </el-card>
   </div>
 </template>
@@ -357,12 +406,23 @@ export default {
       }
       cb(new Error('输入不合法'))
     }
+    var checkMessage = (rule, value, cb) => {
+      // const reg = /(\{expertName\})/
+      const reg2 = /(\{createTime\})/
+      const reg3 = /(\{projectName\})/
+      if (value === null) { return cb() }
+      if (reg2.test(value) && reg3.test(value)) {
+        return cb()
+      }
+      cb(new Error('必须包含{createTime}、{projectName}'))
+    }
     return {
       // 城市级联可多选
       props: { multiple: true },
       activeIndex: '0',
       addForm: {
-        extractType: '1'
+        extractType: '1',
+        result: []
       },
       addFormRules: {
         projectId: [
@@ -408,6 +468,7 @@ export default {
       },
       projectList: [],
       projectForm: {
+        projectId: '',
         moreExtNum: '0'
       },
       pca: pca,
@@ -451,7 +512,17 @@ export default {
       // 抽取结果
       resultList: [],
       // 穿梭款数据
-      resultData: []
+      resultData: [],
+      // 信息对话框
+      messageDialogVisible: false,
+      messageForm: {},
+      messageFormRules: {
+        mesInfo: [{
+          validator: checkMessage,
+          trigger: 'blur'
+        }]
+      },
+      systemMessageList: []
     }
   },
   created () {
@@ -487,11 +558,15 @@ export default {
         this.$message.error('先完成项目信息')
         return false
       }
-      if (activeName === '3') {
-        if (this.resultList.length === 0 && this.multipleSelection.length === 0) {
-          this.$message.error('请先抽取专家')
-          return false
-        }
+      if (activeName === '3' && this.resultList.length === 0 && this.multipleSelection.length === 0) {
+        this.$message.error('请先抽取专家')
+        return false
+      }
+      if (oldActiveName === '3') {
+        this.multipleSelection = []
+        this.resultList = []
+        this.resultData = []
+        this.addForm.result = []
       }
       this.$refs.projectFormRef.validate(valid => {
         this.validateValue = valid
@@ -507,6 +582,14 @@ export default {
         this.getExpertList()
       }
       if (this.activeIndex === '3') {
+        const data = []
+        this.multipleSelection.forEach(item => {
+          data.push({
+            key: item.expertId,
+            label: item.name
+          })
+        })
+        this.resultData = data
         if (this.multipleSelection.length < (this.addForm.extractType !== '3' ? this.projectForm.extractNum : this.projectForm.moreExtNum)) {
           this.$confirm('您还有未使用的抽取次数', '是否返回', '提示', {
             confirmButtonText: '离开',
@@ -633,6 +716,10 @@ export default {
         this.$message.error('抽取次数不足,不可全选')
       }
     },
+    extractTypeChange() {
+      this.multipleSelection = []
+      this.$refs.multipleTable.clearSelection()
+    },
     getRowKey (row) {
       return row.expertId
     },
@@ -659,6 +746,59 @@ export default {
       })
       this.resultData = data
       this.activeIndex = '3'
+    },
+    async showMessageDialog () {
+      if (this.addForm.result.length === 0) {
+        return this.$message.error('未选择发送对象')
+      }
+      this.messageDialogVisible = true
+      const { data: res } = await this.$http.get('/commonSystemMessageController/selectAll')
+      if (res.code !== 200) {
+        this.$message.error('查找失败')
+      }
+      this.systemMessageList = res.data
+    },
+    MessageDialogClosed () {
+      // 重置表单
+      this.messageForm.messageId = ''
+      this.$refs.messageFormRef.resetFields()
+    },
+    async messageChange () {
+      const { data: res } = await this.$http.get('/commonSystemMessageController/selectById/' + this.messageForm.messageId)
+      if (res.code !== 200) {
+        this.$message.error('查找失败')
+      }
+      this.messageForm = res.data
+    },
+    sendSms () {
+      this.$refs.messageFormRef.validate(valid => {
+        if (!valid) {
+          return this.$message.error('修改格式')
+        }
+        this.sendSms2()
+      })
+    },
+    sendSms2() {
+      this.$refs.addFormRef.validate(async valid => {
+        if (!valid) return
+        this.projectForm.projectId = this.addForm.projectId
+        const { data: res } = await this.$http.put('/commonProjectInfoController/updateById', this.projectForm)
+        const { data: res2 } = await this.$http.post('/expertExtractionController/sendSms', {
+          expertInfo: this.resultList.length === 0 ? this.multipleSelection : this.resultList,
+          projectInfo: this.projectForm,
+          type: this.addForm.extractType,
+          sendId: this.addForm.result,
+          sendText: this.messageForm.mesInfo
+        })
+        if (res.code !== 200) {
+          return this.$message.error('更新失败')
+        }
+        if (res2.code !== 200) {
+          return this.$message.error('发送失败')
+        }
+        this.$message.success('抽取完成')
+        await this.$router.push('/resultInfo')
+      })
     }
   }
 }
@@ -685,8 +825,5 @@ export default {
       display: inline-block;
       margin-right: 50px;
     }
-  }
-  .self{
-    display: none;
   }
 </style>

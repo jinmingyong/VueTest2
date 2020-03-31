@@ -16,6 +16,8 @@ import UsersInfo from '../views/usersManage/UsersInfo'
 import RolesInfo from '../views/usersManage/RolesInfo'
 import ResourceInfo from '../views/usersManage/ResourceInfo'
 import DirectExtraction from '../views/expertExtraction/DirectExtraction'
+import ResultInfo from '../views/expertExtraction/ResultInfo'
+import MessageInfo from '../views/systemSetting/MessageInfo'
 
 Vue.use(VueRouter)
 
@@ -44,7 +46,9 @@ const routes = [
       { path: '/usersInfo', component: UsersInfo },
       { path: '/rolesInfo', component: RolesInfo },
       { path: '/resourceInfo', component: ResourceInfo },
-      { path: '/directExtraction', component: DirectExtraction }
+      { path: '/directExtraction', component: DirectExtraction },
+      { path: '/resultInfo', component: ResultInfo },
+      { path: '/messageInfo', component: MessageInfo }
     ]
   },
   {
