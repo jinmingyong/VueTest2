@@ -124,6 +124,7 @@
         show-checkbox
         node-key="permissionId"
         default-expand-all
+        check-on-click-node
         :default-checked-keys="defKeys"
         :props="treeProps">
       </el-tree>

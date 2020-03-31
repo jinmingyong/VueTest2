@@ -4,7 +4,7 @@ body,
     height: 100%;
     margin: 0;
     padding: 0;
-    min-width: 1366px;
+    min-width: 1500px;
 }
 .el-breadcrumb{
     margin-bottom: 15px;
@@ -33,4 +33,10 @@ body,
 }
 .area-select.large{
     line-height: 20px;
+}
+.el-steps {
+    margin: 15px 0;
+}
+.el-step__title{
+    font-size: 13px;
 }

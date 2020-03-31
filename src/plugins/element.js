@@ -40,7 +40,11 @@ import {
   TabPane,
   Tag,
   MessageBox,
-  Tree
+  Tree,
+  Alert,
+  Steps,
+  Step,
+  Transfer
 
 } from 'element-ui'
 
@@ -83,5 +87,9 @@ Vue.use(Tabs)
 Vue.use(TabPane)
 Vue.use(Tag)
 Vue.use(Tree)
+Vue.use(Alert)
+Vue.use(Step)
+Vue.use(Steps)
+Vue.use(Transfer)
 Vue.prototype.$confirm = MessageBox.confirm
 Vue.prototype.$message = Message

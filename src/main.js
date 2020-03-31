@@ -9,8 +9,6 @@ import './assets/css/global.css'
 import './assets/font_11bu2z7jfowp/iconfont.css'
 // 导入sweetalert2
 import VueSweetAlert2 from './plugins/sweetalert2'
-// 导入区域选择器
-import VueAreaLinkage from 'vue-area-linkage'
 
 import axios from 'axios'
 
@@ -30,7 +28,6 @@ axios.interceptors.request.use(config => {
 
 Vue.prototype.$http = axios
 Vue.use(VueSweetAlert2)
-Vue.use(VueAreaLinkage)
 Vue.config.productionTip = false
 new Vue({
   router,

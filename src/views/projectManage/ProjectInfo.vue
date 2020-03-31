@@ -152,6 +152,9 @@ export default {
       const reg = /^[1-9]\d*$/
       if (value === null) { return cb() }
       if (reg.test(value)) {
+        if (value > 10) {
+          cb(new Error('最多抽取10位专家'))
+        }
         return cb()
       }
       cb(new Error('输入不合法'))

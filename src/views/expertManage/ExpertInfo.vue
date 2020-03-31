@@ -177,7 +177,7 @@
         <el-input v-model="addForm.nation" />
       </el-form-item>
       <el-form-item label="所在城市" prop="city">
-        <area-cascader type='text' v-model='addForm.city' :data="pca" v-if="show"></area-cascader>
+        <el-cascader v-model='addForm.city' :options="pca" style="width: 200px"></el-cascader>
       </el-form-item>
       <el-form-item label="身份证号" prop="icCard">
         <el-input v-model="addForm.icCard" />
@@ -330,7 +330,7 @@
         <el-input v-model="editForm.nation" />
       </el-form-item>
       <el-form-item label="所在城市" prop="city">
-        <area-cascader type='text' v-model='editForm.city' :data="pca" v-if="show"></area-cascader>
+        <el-cascader v-model='editForm.city' :options="pca" style="width: 200px"></el-cascader>
       </el-form-item>
       <el-form-item label="身份证号" prop="icCard">
         <el-input v-model="editForm.icCard" disabled/>
@@ -433,7 +433,6 @@
 </div>
 </template>
 <script>
-import 'vue-area-linkage/dist/index.css'// v2 or higher
 import { pca } from 'area-data'
 export default {
   name: 'expertInfo',
@@ -486,8 +485,6 @@ export default {
       },
       // 区域数据
       pca: pca,
-      // 解决区域选择器bug
-      show: true,
       // 单位Option
       companyOption: [],
       // 行业Option
@@ -745,15 +742,11 @@ export default {
     // 监听添加对话框关闭操作
     addDialogClosed () {
       // 重置表单
-      this.show = false
-      setTimeout(() => { this.show = true }, 0)
-      this.addForm.city = ''
       this.$refs.addFormRef.resetFields()
     },
     editDialogClosed () {
       // 重置表单
       this.$refs.editFormRef.resetFields()
-      this.editForm.city = ''
       this.imageUrl = ''
     },
     // 添加专家信息
@@ -797,15 +790,14 @@ export default {
     },
     // 显示编辑信息对话框
     async showEditDialog (expertId) {
-      this.show = false
       this.editDialogVisible = true
       const { data: res } = await this.$http.get('/commonExpertInfoController/selectById/' + expertId)
       if (res.code !== 200) {
         this.$message.error('查找失败')
       }
-      this.show = true
       res.data.city = res.data.city.split(',')
       this.editForm = res.data
+      console.log(this.editForm.city)
       this.imageUrl = 'http://localhost:8082/pic/' + this.editForm.picture
     },
     // 更新专家
