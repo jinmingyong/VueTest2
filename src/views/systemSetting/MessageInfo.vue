@@ -82,6 +82,16 @@
 export default {
   name: 'systemMessageInfo',
   data () {
+    var checkMessage = (rule, value, cb) => {
+      const reg = /(\{expertName\})/
+      const reg2 = /(\{createTime\})/
+      const reg3 = /(\{projectName\})/
+      if (value === null) { return cb() }
+      if (reg.test(value) && reg2.test(value) && reg3.test(value)) {
+        return cb()
+      }
+      cb(new Error('必须包含{expertName}、{createTime}、{projectName}'))
+    }
     return {
       queryInfo: {
         pageNum: 1,
@@ -102,22 +112,16 @@ export default {
         mesInfo: ''
       },
       addFormRules: {
-        mesInfo: [
-          {
-            required: true,
-            message: '请输入消息',
-            trigger: 'blur'
-          }
-        ]
+        mesInfo: [{
+          validator: checkMessage,
+          trigger: 'blur'
+        }]
       },
       editFormRules: {
-        mesInfo: [
-          {
-            required: true,
-            message: '请输入消息名',
-            trigger: 'blur'
-          }
-        ]
+        mesInfo: [{
+          validator: checkMessage,
+          trigger: 'blur'
+        }]
       }
     }
   },

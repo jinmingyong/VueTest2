@@ -21,7 +21,6 @@
           <el-step title="挑选参数"></el-step>
           <el-step title="选择专家"></el-step>
           <el-step title="查看结果"></el-step>
-          <el-step title="完成"></el-step>
         </el-steps>
       </div>
       <el-form :model="addForm" :rules="addFormRules" ref="addFormRef" status-icon
@@ -383,7 +382,11 @@
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button @click="messageDialogVisible = false">取 消</el-button>
-          <el-button type="primary" @click="sendSms">确 定</el-button>
+          <el-button type="primary" @click="sendSms" v-loading.fullscreen.lock="fullscreenLoading"
+                     element-loading-text="正在发送中"
+                     element-loading-spinner="el-icon-loading"
+                     element-loading-background="rgba(0, 0, 0, 0.8)"
+          >确 定</el-button>
         </div>
       </el-dialog>
     </el-card>
@@ -407,14 +410,14 @@ export default {
       cb(new Error('输入不合法'))
     }
     var checkMessage = (rule, value, cb) => {
-      // const reg = /(\{expertName\})/
+      const reg = /(\{expertName\})/
       const reg2 = /(\{createTime\})/
       const reg3 = /(\{projectName\})/
       if (value === null) { return cb() }
-      if (reg2.test(value) && reg3.test(value)) {
+      if (reg.test(value) && reg2.test(value) && reg3.test(value)) {
         return cb()
       }
-      cb(new Error('必须包含{createTime}、{projectName}'))
+      cb(new Error('必须包含{expertName}、{createTime}、{projectName}'))
     }
     return {
       // 城市级联可多选
@@ -522,7 +525,9 @@ export default {
           trigger: 'blur'
         }]
       },
-      systemMessageList: []
+      systemMessageList: [],
+      // loading 判断
+      fullscreenLoading: false
     }
   },
   created () {
@@ -567,6 +572,7 @@ export default {
         this.resultList = []
         this.resultData = []
         this.addForm.result = []
+        this.$refs.multipleTable.clearSelection()
       }
       this.$refs.projectFormRef.validate(valid => {
         this.validateValue = valid
@@ -779,6 +785,7 @@ export default {
       })
     },
     sendSms2() {
+      this.fullscreenLoading = true
       this.$refs.addFormRef.validate(async valid => {
         if (!valid) return
         this.projectForm.projectId = this.addForm.projectId
@@ -797,7 +804,9 @@ export default {
           return this.$message.error('发送失败')
         }
         this.$message.success('抽取完成')
-        await this.$router.push('/resultInfo')
+        this.fullscreenLoading = false
+        await this.$router.push({ name: 'resultInfo', params: { resultId: res2.data } })
+        window.sessionStorage.setItem('activePath', '/resultInfo')
       })
     }
   }

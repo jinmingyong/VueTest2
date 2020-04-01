@@ -2,8 +2,6 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Login from '../components/Login'
 import Home from '../components/Home'
-import Add from '../components/add'
-import Details from '../components/details-account-info'
 import Welcome from '../views/Welcome'
 import ExpertInfo from '../views/expertManage/ExpertInfo'
 import ProjectInfo from '../views/projectManage/ProjectInfo'
@@ -47,17 +45,9 @@ const routes = [
       { path: '/rolesInfo', component: RolesInfo },
       { path: '/resourceInfo', component: ResourceInfo },
       { path: '/directExtraction', component: DirectExtraction },
-      { path: '/resultInfo', component: ResultInfo },
+      { path: '/resultInfo', name: 'resultInfo', component: ResultInfo },
       { path: '/messageInfo', component: MessageInfo }
     ]
-  },
-  {
-    path: '/add',
-    component: Add
-  },
-  {
-    path: '/details',
-    component: Details
   }
 ]
 
