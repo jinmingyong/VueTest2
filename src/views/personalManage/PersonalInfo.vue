@@ -68,14 +68,37 @@
           </div>
         </el-tab-pane>
         <el-tab-pane name="message">
-          <span slot="label"><i class="iconfont icon-messagecenter" style="vertical-align: middle"></i> 消息管理</span>
-          消息
+          <span slot="label"><i class="iconfont icon-messagecenter" style="vertical-align: middle"></i> <el-badge :value="newMessageCount" :hidden="newMessageCount !==0?false:true ">消息管理</el-badge></span>
+            <div v-for="item in messageList" :key="item.mesId" style="margin: 20px 0">
+              <el-badge value="new">
+                <el-card shadow="hover" style="width:580px;">
+                  <div slot="header">
+                    <span>{{item.mesTitle}}</span>
+                    <el-button style="float: right; padding: 3px 0" type="text" @click="showreplyDialog(item)">回复</el-button>
+                  </div>
+                  <div>
+                    <p>{{item.mesContent}}</p>
+                  </div>
+                </el-card>
+              </el-badge>
+            </div>
         </el-tab-pane>
       </el-tabs>
+    <el-dialog title="回复消息" :visible.sync="replyDialogVisible"  width="50%">
+      <!--主体-->
+     <div>
+       {{message.mesContent}}
+     </div>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="danger" @click="replyMessage('2')">不参加</el-button>
+        <el-button type="primary" @click="replyMessage('1')">参加</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
+import Utils from '../../assets/util.js'
 export default {
   name: 'personalInfo',
   data () {
@@ -140,12 +163,20 @@ export default {
           { validator: validatePass2, trigger: 'blur' },
           { min: 6, max: 15, message: '长度为6到15之间', trigger: 'blur' }
         ]
-      }
+      },
+      replyDialogVisible: false,
+      messageList: [],
+      message: {},
+      newMessageCount: 0
     }
   },
   created () {
     this.getPersonalInfo()
+    this.getNewMessageCount()
     this.tabsValue = window.sessionStorage.getItem('tabsValue')
+    if (this.tabsValue === 'message') {
+      this.getMessage()
+    }
   },
   methods: {
     async getPersonalInfo () {
@@ -165,6 +196,9 @@ export default {
         case 'editPassword':
           this.editPasswordForm.id = this.users.id
           this.editPasswordForm.username = this.users.username
+          break
+        case 'message':
+          this.getMessage()
           break
         default:
       }
@@ -204,10 +238,53 @@ export default {
         )
         await this.$router.push('/login')
       })
+    },
+    async getMessage () {
+      const { data: res } = await this.$http.get('/personalInfoController/selectMessageByToken')
+      if (res.code !== 200) {
+        this.$message.error('获取消息失败')
+      }
+      this.messageList = res.data
+    },
+    showreplyDialog(row) {
+      this.message = row
+      this.replyDialogVisible = true
+    },
+    async replyMessage (flagSts) {
+      const { data: res } = await this.$http.put('/personalInfoController/replayMessage', {
+        mesId: this.message.mesId,
+        resId: this.message.resId,
+        expId: this.message.expId,
+        flagSts: flagSts
+      })
+      if (res.code !== 200) {
+        this.$message.error('回复失败')
+      }
+      this.replyDialogVisible = false
+      this.getMessage()
+      this.getNewMessageCount()
+      Utils.$emit('getNewMessageCount')
+    },
+    async getNewMessageCount() {
+      const { data: res } = await this.$http.get('/personalInfoController/selectMessageCount')
+      if (res.code !== 200) return this.$message.error(res.msg)
+      this.newMessageCount = res.data
     }
   }
 }
 </script>
 
 <style lang="less" scoped>
+  .el-card.is-hover-shadow{
+    box-shadow: none!important;
+  }
+  .el-card.is-always-shadow,.el-card.is-hover-shadow:hover {
+    -webkit-box-shadow: 0 2px 12px 0 rgba(0,0,0,.1) !important;
+    box-shadow: 0 2px 12px 0 rgba(0,0,0,.1);
+  }
+  .el-tab-pane{
+    height: 400px;
+    overflow-y:scroll;
+  }
+  .element::-webkit-scrollbar { width: 0 !important }
 </style>

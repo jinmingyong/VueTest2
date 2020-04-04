@@ -7,11 +7,12 @@
         <span>专家库管理系统</span>
       </div>
       <el-dropdown  @command="handleCommand"  placement="bottom">
-      <el-avatar class="iconfont icon-bussiness-man-fill" style="font-size: 25px"></el-avatar>
+      <el-badge :is-dot="newMessageCount===0? false:true"><el-avatar class="iconfont icon-bussiness-man-fill" style="font-size: 25px"></el-avatar></el-badge>
         <el-dropdown-menu slot="dropdown" style="width: 150px;text-align: center">
           <el-dropdown-item disabled style="margin-top: 10px"><span style="color: #00bef6;font-weight: bold">{{userName}}!您好</span></el-dropdown-item>
           <el-divider><i class="iconfont icon-contacts"></i></el-divider>
-          <el-dropdown-item v-for=" item in menulistForPre" :key="item.menuId" :command="item.menuUrl.toString()"><i :class="'iconfont '+iconsObj[item.menuId]" style="font-size: 25px; vertical-align: middle"></i>{{item.menuName}}</el-dropdown-item>
+          <el-dropdown-item v-for=" item in menulistForPre" :key="item.menuId" :command="item.menuUrl.toString()"><el-badge :hidden="(item.menuId ===18 && newMessageCount !== 0 )?false:true" :value="newMessageCount"><i :class="'iconfont '+iconsObj[item.menuId]" style="font-size: 25px; vertical-align: middle"></i>{{item.menuName}}</el-badge>
+          </el-dropdown-item>
           <el-dropdown-item divided command="logout"><i class="iconfont icon-logout" style="font-size: 20px; vertical-align: middle"></i>退出</el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
@@ -62,6 +63,7 @@
 </template>
 
 <script>
+import Utils from '../assets/util.js'
 export default {
   name: 'Home',
   data() {
@@ -83,11 +85,13 @@ export default {
       },
       isCollpase: false,
       // 被激活的链接地址
-      activePath: ''
+      activePath: '',
+      newMessageCount: 0
     }
   },
   created () {
     this.getMenuList()
+    this.getNewMessageCount()
     this.activePath = window.sessionStorage.getItem('activePath ')
   },
   methods: {
@@ -138,7 +142,18 @@ export default {
         default:
       }
       location.reload()
+    },
+    async getNewMessageCount() {
+      const { data: res } = await this.$http.get('/personalInfoController/selectMessageCount')
+      if (res.code !== 200) return this.$message.error(res.msg)
+      this.newMessageCount = res.data
     }
+  },
+  mounted () {
+    var that = this
+    Utils.$on('getNewMessageCount', function () {
+      that.getNewMessageCount()
+    })
   }
 }
 </script>
@@ -201,5 +216,20 @@ export default {
     text-align: center;
     cursor: pointer;
   }
-
+  .el-badge {
+    /deep/.el-badge__content
+    {
+      margin-top:5px;
+      margin-right: 5px;
+    }
+  }
+  .el-dropdown-menu{
+    .el-badge {
+      /deep/.el-badge__content
+      {
+        margin-right: -6px;
+        margin-top: 7px;
+      }
+    }
+  }
 </style>

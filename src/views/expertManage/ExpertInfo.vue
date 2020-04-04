@@ -685,10 +685,10 @@ export default {
     },
     // 获得option
     async getOption () {
-      const { data: res } = await this.$http.get('commonCompanyInfoController/selectAll', { params: { status: 1 } })
-      const { data: res2 } = await this.$http.get('commonIndustryInfoController/selectAll', { params: { status: 1 } })
-      const { data: res3 } = await this.$http.get('commonMajorInfoController/selectAll', { params: { status: 1 } })
-      const { data: res4 } = await this.$http.get('commonJobgradeInfoController/selectAll', { params: { status: 1 } })
+      const { data: res } = await this.$http.get('/commonCompanyInfoController/selectAll', { params: { status: 1 } })
+      const { data: res2 } = await this.$http.get('/commonIndustryInfoController/selectAll', { params: { status: 1 } })
+      const { data: res3 } = await this.$http.get('/commonMajorInfoController/selectAll', { params: { status: 1 } })
+      const { data: res4 } = await this.$http.get('/commonJobgradeInfoController/selectAll', { params: { status: 1 } })
       if (res.code !== 200 || res2.code !== 200 || res3.code !== 200 || res4.code !== 200) return this.$message.error('获取option失败')
       this.companyOption = res.data
       this.industryOption = res2.data

@@ -45,7 +45,8 @@ import {
   Steps,
   Step,
   Transfer,
-  Loading
+  Loading,
+  Badge
 
 } from 'element-ui'
 
@@ -93,5 +94,6 @@ Vue.use(Step)
 Vue.use(Steps)
 Vue.use(Transfer)
 Vue.use(Loading)
+Vue.use(Badge)
 Vue.prototype.$confirm = MessageBox.confirm
 Vue.prototype.$message = Message
