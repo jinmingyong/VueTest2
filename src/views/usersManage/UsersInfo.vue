@@ -263,7 +263,7 @@ export default {
         if (!valid) return
         const { data: res } = await this.$http.post('/usersController/insertUsersInfo', this.addForm)
         if (res.code !== 200) {
-          this.$message.error('添加失败')
+          return this.$message.error('添加失败')
         }
         this.$message.success('添加成功')
         this.addDialogVisible = false
@@ -276,7 +276,7 @@ export default {
       this.editDialogVisible = true
       const { data: res } = await this.$http.get('/commonUsersController/selectById/' + id)
       if (res.code !== 200) {
-        this.$message.error('查找失败')
+        return this.$message.error('查找失败')
       }
       this.editForm = res.data
       console.log(this.editForm)
@@ -298,7 +298,7 @@ export default {
         if (!valid) return
         const { data: res } = await this.$http.put('/commonUsersController/updateById', this.editForm)
         if (res.code !== 200) {
-          this.$message.error('更新失败')
+          return this.$message.error('更新失败')
         }
         this.editDialogVisible = false
         // 重新获取数据
@@ -324,6 +324,7 @@ export default {
         if (res.code !== 200) {
           return that.$message.error('删除失败')
         }
+        that.queryInfo.pageNum = 1
         await that.getUsersList()
         that.$swal(
           '删除！',

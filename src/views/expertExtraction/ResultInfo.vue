@@ -73,34 +73,34 @@
       <el-dialog title="最新结果" :visible.sync="DialogVisible" width="70%">
         <el-table :data="newResult" stripe :header-cell-style="{ 'font-size':'15px'}" style="width: 100%;min-height: 500px">
           <el-table-column type="expand">
-            <template slot-scope="props">
-              <el-table :data="props.row.children" stripe border :header-cell-style="{ 'font-size':'13px'}">
-                <el-table-column type="index"/>
-                <el-table-column label="专家名字" prop="name"/>
-                <el-table-column label="年龄" prop="age"/>
-                <el-table-column label="性别" prop="sex"/>
-                <el-table-column label="职称" prop="jobGrade"/>
-                <el-table-column label="行业" prop="industry"/>
-                <el-table-column label="单位" prop="company"/>
-                <el-table-column label="专业" prop="major"/>
-                <el-table-column label="城市" prop="city"/>
-                <el-table-column label="发送情况">
-                  <template slot-scope="scope">
-                    <span v-if="scope.row.flagEmail==='0'">发送失败<i class="iconfont icon-close" style="color: #c90015;vertical-align: bottom"></i></span>
-                    <span v-else-if="scope.row.flagEmail==='1'">发送成功<i class="iconfont icon-check" style="color: #25c91b;vertical-align: bottom"></i></span>
-                    <span v-else>未发送<i class="iconfont icon-question" style="color: #ecee00;vertical-align: bottom"></i></span>
-                  </template>
-                </el-table-column>
-                <el-table-column label="是否参加" prop="flagSts">
-                  <template slot-scope="scope">
-                    <span v-if="scope.row.flagSts==='0'">不参加<i class="iconfont icon-close" style="color: #c90015;vertical-align: bottom"></i></span>
-                    <span v-else-if="scope.row.flagSts==='1'">参加<i class="iconfont icon-check" style="color: #25c91b;vertical-align: bottom"></i></span>
-                    <span v-else>未确认<i class="iconfont icon-question" style="color: #ecee00;vertical-align: bottom"></i></span>
-                  </template>
-                </el-table-column>
-              </el-table>
-            </template>
-          </el-table-column>
+          <template slot-scope="props">
+            <el-table :data="props.row.children" stripe border :header-cell-style="{ 'font-size':'13px'}">
+              <el-table-column type="index"/>
+              <el-table-column label="专家名字" prop="name"/>
+              <el-table-column label="年龄" prop="age"/>
+              <el-table-column label="性别" prop="sex"/>
+              <el-table-column label="职称" prop="jobGrade"/>
+              <el-table-column label="行业" prop="industry"/>
+              <el-table-column label="单位" prop="company"/>
+              <el-table-column label="专业" prop="major"/>
+              <el-table-column label="城市" prop="city"/>
+              <el-table-column label="发送情况">
+                <template slot-scope="scope">
+                  <span v-if="scope.row.flagEmail==='0'">发送失败<i class="iconfont icon-close" style="color: #c90015;vertical-align: bottom"></i></span>
+                  <span v-else-if="scope.row.flagEmail==='1'">发送成功<i class="iconfont icon-check" style="color: #25c91b;vertical-align: bottom"></i></span>
+                  <span v-else>未发送<i class="iconfont icon-question" style="color: #ecee00;vertical-align: bottom"></i></span>
+                </template>
+              </el-table-column>
+              <el-table-column label="是否参加" prop="flagSts">
+                <template slot-scope="scope">
+                  <span v-if="scope.row.flagSts==='0'">不参加<i class="iconfont icon-close" style="color: #c90015;vertical-align: bottom"></i></span>
+                  <span v-else-if="scope.row.flagSts==='1'">参加<i class="iconfont icon-check" style="color: #25c91b;vertical-align: bottom"></i></span>
+                  <span v-else>未确认<i class="iconfont icon-question" style="color: #ecee00;vertical-align: bottom"></i></span>
+                </template>
+              </el-table-column>
+            </el-table>
+          </template>
+        </el-table-column>
           <el-table-column type="index"/>
           <el-table-column label="项目名称" prop="proName"/>
           <el-table-column label="抽取类型">

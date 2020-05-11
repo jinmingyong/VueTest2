@@ -554,7 +554,7 @@ export default {
     async getProjectInfo (projectId) {
       const { data: res } = await this.$http.get('/commonProjectInfoController/selectById/' + projectId)
       if (res.code !== 200) {
-        this.$message.error('查找失败')
+        return this.$message.error('查找失败')
       }
       this.projectForm = res.data
     },
@@ -760,7 +760,7 @@ export default {
       this.messageDialogVisible = true
       const { data: res } = await this.$http.get('/commonSystemMessageController/selectAll')
       if (res.code !== 200) {
-        this.$message.error('查找失败')
+        return this.$message.error('查找失败')
       }
       this.systemMessageList = res.data
     },
@@ -772,7 +772,7 @@ export default {
     async messageChange () {
       const { data: res } = await this.$http.get('/commonSystemMessageController/selectById/' + this.messageForm.messageId)
       if (res.code !== 200) {
-        this.$message.error('查找失败')
+        return this.$message.error('查找失败')
       }
       this.messageForm = res.data
     },
@@ -798,10 +798,11 @@ export default {
           sendText: this.messageForm.mesInfo
         })
         if (res.code !== 200) {
+          this.fullscreenLoading = false
           return this.$message.error('更新失败')
         }
         if (res2.code !== 200) {
-          return this.$message.error('发送失败')
+          this.$message.error('发送失败')
         }
         this.$message.success('抽取完成')
         this.fullscreenLoading = false

@@ -90,7 +90,7 @@
        {{message.mesContent}}
      </div>
       <div slot="footer" class="dialog-footer">
-        <el-button type="danger" @click="replyMessage('2')">不参加</el-button>
+        <el-button type="danger" @click="replyMessage('0')">不参加</el-button>
         <el-button type="primary" @click="replyMessage('1')">参加</el-button>
       </div>
     </el-dialog>
@@ -182,7 +182,7 @@ export default {
     async getPersonalInfo () {
       const { data: res } = await this.$http.get('/personalInfoController/getUserInfoByToken')
       if (res.code !== 200) {
-        this.$message.error('获取个人信息失败')
+        return this.$message.error('获取个人信息失败')
       }
       this.users = res.data
       this.editForm = this.users
@@ -209,7 +209,7 @@ export default {
         if (!valid) return
         const { data: res } = await this.$http.put('/commonUsersController/updateById', this.editForm)
         if (res.code !== 200) {
-          this.$message.error('更新失败')
+          return this.$message.error('更新失败')
         }
         this.$message.success('修改成功')
         this.getPersonalInfo()
@@ -242,7 +242,7 @@ export default {
     async getMessage () {
       const { data: res } = await this.$http.get('/personalInfoController/selectMessageByToken')
       if (res.code !== 200) {
-        this.$message.error('获取消息失败')
+        return this.$message.error('获取消息失败')
       }
       this.messageList = res.data
     },
@@ -258,7 +258,7 @@ export default {
         flagSts: flagSts
       })
       if (res.code !== 200) {
-        this.$message.error('回复失败')
+        return this.$message.error('回复失败')
       }
       this.replyDialogVisible = false
       this.getMessage()

@@ -11,12 +11,12 @@
     <!--搜索框区域-->
     <el-row :gutter="20">
       <el-col :span="8" style="position: absolute;right: 1%" >
-        <el-input placeholder="请输入内容" class="input-with-select" v-model="queryInfo.name" clearable @clear="getExpertList">
+        <el-input v-if="show" placeholder="请输入内容" class="input-with-select" v-model="queryInfo.name" clearable @clear="getExpertList">
           <el-button slot="append" icon="el-icon-search" @click="getExpertList"></el-button>
         </el-input>
       </el-col>
       <el-col :span="4">
-        <el-button type="primary" @click="addDialogVisible=true">添加专家</el-button>
+        <el-button v-if="show || addshow" type="primary" @click="addDialogVisible=true">添加专家</el-button>
       </el-col>
     </el-row>
     <el-table :data="expertList" stripe :header-cell-style="{ 'font-size':'15px'}" style="width: 100%">
@@ -90,7 +90,7 @@
       <el-table-column label="姓名" prop="name"/>
       <el-table-column label="年龄" prop="age"/>
       <el-table-column label="性别" prop="sex"/>
-      <el-table-column label="状态" prop="status">
+      <el-table-column label="状态" prop="status" v-if="show">
         <!--scope为这一行的数据-->
         <template slot-scope="scope">
           <!--active-value控制激活状态-->
@@ -110,13 +110,14 @@
             <el-button type="primary" icon="el-icon-edit" size="mini" @click="showEditDialog(scope.row.expertId)"/>
           </el-tooltip>
           <el-tooltip effect="dark" content="删除" placement="top" :enterable="false" :open-delay="700">
-          <el-button type="danger" icon="el-icon-delete" size="mini" @click="deleteExpert(scope.row.expertId)"/>
+          <el-button type="danger" v-if="show" icon="el-icon-delete" size="mini" @click="deleteExpert(scope.row.expertId)"/>
           </el-tooltip>
         </template>
       </el-table-column>
     </el-table>
     <!--分页-->
     <el-pagination
+      v-if="show"
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
       :current-page="queryInfo.pageNum"
@@ -478,6 +479,7 @@ export default {
       cb(new Error('输入不合法'))
     }
     return {
+      users: {},
       queryInfo: {
         name: '',
         pageNum: 1,
@@ -669,12 +671,14 @@ export default {
         city: [
           { required: true, message: '请选择所在城市', trigger: 'blur' }
         ]
-      }
+      },
+      addshow: false,
+      show: true
     }
   },
   created () {
-    this.getExpertList()
     this.getOption()
+    this.getPersonalInfo()
   },
   methods: {
     async getExpertList () {
@@ -755,37 +759,43 @@ export default {
         if (!valid) return
         if (this.$refs.addJobGrade.createdLabel !== null) {
           const { data: res } = await this.$http.post('/commonJobgradeInfoController/insert', { jobGrade: this.$refs.addJobGrade.createdLabel })
-          if (res.code !== 200) { this.$message.error('添加新选项失败') }
+          if (res.code !== 200) { return this.$message.error('添加新选项失败') }
           this.addForm.jobGrade = res.data
           this.getOption()
         }
         if (this.$refs.addCompany.createdLabel !== null) {
           const { data: res } = await this.$http.post('/commonCompanyInfoController/insert', { company: this.$refs.addCompany.createdLabel })
-          if (res.code !== 200) { this.$message.error('添加新选项失败') }
+          if (res.code !== 200) { return this.$message.error('添加新选项失败') }
           this.addForm.company = res.data
           this.getOption()
         }
         if (this.$refs.addIndustry.createdLabel !== null) {
           const { data: res } = await this.$http.post('/commonIndustryInfoController/insert', { industry: this.$refs.addIndustry.createdLabel })
-          if (res.code !== 200) { this.$message.error('添加新选项失败') }
+          if (res.code !== 200) { return this.$message.error('添加新选项失败') }
           this.addForm.industry = res.data
           this.getOption()
         }
         if (this.$refs.addMajor.createdLabel !== null) {
           const { data: res } = await this.$http.post('/commonMajorInfoController/insert', { major: this.$refs.addMajor.createdLabel })
-          if (res.code !== 200) { this.$message.error('添加新选项失败') }
+          if (res.code !== 200) { return this.$message.error('添加新选项失败') }
           this.addForm.major = res.data
           this.getOption()
         }
         this.addForm.city = this.addForm.city.toString()
         const { data: res } = await this.$http.post('/commonExpertInfoController/insert', this.addForm)
         if (res.code !== 200) {
-          this.$message.error('添加失败')
+          return this.$message.error('添加失败')
         }
         this.$message.success('添加成功')
         this.addDialogVisible = false
         // 重新获取数据
-        this.getExpertList()
+        if (this.users.roleId === 2) {
+          this.getExpertInfo()
+          this.show = false
+        } else {
+          this.getExpertList()
+          this.show = true
+        }
       })
     },
     // 显示编辑信息对话框
@@ -793,7 +803,7 @@ export default {
       this.editDialogVisible = true
       const { data: res } = await this.$http.get('/commonExpertInfoController/selectById/' + expertId)
       if (res.code !== 200) {
-        this.$message.error('查找失败')
+        return this.$message.error('查找失败')
       }
       res.data.city = res.data.city.split(',')
       this.editForm = res.data
@@ -805,25 +815,25 @@ export default {
       this.$refs.editFormRef.validate(async valid => {
         if (this.$refs.editJobGrade.createdLabel !== null) {
           const { data: res } = await this.$http.post('/commonJobgradeInfoController/insert', { jobGrade: this.$refs.editJobGrade.createdLabel })
-          if (res.code !== 200) { this.$message.error('添加新选项失败') }
+          if (res.code !== 200) { return this.$message.error('添加新选项失败') }
           this.editForm.jobGrade = res.data
           this.getOption()
         }
         if (this.$refs.editCompany.createdLabel !== null) {
           const { data: res } = await this.$http.post('/commonCompanyInfoController/insert', { company: this.$refs.editCompany.createdLabel })
-          if (res.code !== 200) { this.$message.error('添加新选项失败') }
+          if (res.code !== 200) { return this.$message.error('添加新选项失败') }
           this.editForm.company = res.data
           this.getOption()
         }
         if (this.$refs.editIndustry.createdLabel !== null) {
           const { data: res } = await this.$http.post('/commonIndustryInfoController/insert', { industry: this.$refs.editIndustry.createdLabel })
-          if (res.code !== 200) { this.$message.error('添加新选项失败') }
+          if (res.code !== 200) { return this.$message.error('添加新选项失败') }
           this.editForm.industry = res.data
           this.getOption()
         }
         if (this.$refs.editMajor.createdLabel !== null) {
           const { data: res } = await this.$http.post('/commonMajorInfoController/insert', { major: this.$refs.editMajor.createdLabel })
-          if (res.code !== 200) { this.$message.error('添加新选项失败') }
+          if (res.code !== 200) { return this.$message.error('添加新选项失败') }
           this.editForm.major = res.data
           this.getOption()
         }
@@ -833,11 +843,17 @@ export default {
         this.editForm.city = this.editForm.city.toString()
         const { data: res } = await this.$http.put('/commonExpertInfoController/updateById', this.editForm)
         if (res.code !== 200) {
-          this.$message.error('更新失败')
+          return this.$message.error('更新失败')
         }
         this.editDialogVisible = false
         // 重新获取数据
-        this.getExpertList()
+        if (this.users.roleId === 2) {
+          this.getExpertInfo()
+          this.show = false
+        } else {
+          this.getExpertList()
+          this.show = true
+        }
         this.$message.success('更新成功')
       })
     },
@@ -857,6 +873,7 @@ export default {
         if (result.dismiss === 'cancel') return
         const { data: res } = await that.$http.delete('/commonExpertInfoController/deleteById/' + expertId)
         if (res.code !== 200) { return that.$message.error('删除失败') }
+        that.queryInfo.pageNum = 1
         await that.getExpertList()
         that.$swal(
           '删除！',
@@ -864,6 +881,32 @@ export default {
           'success'
         )
       }).catch(this.$swal.noop)
+    },
+    async getPersonalInfo () {
+      const { data: res } = await this.$http.get('/personalInfoController/getUserInfoByToken')
+      if (res.code !== 200) {
+        return this.$message.error('获取个人信息失败')
+      }
+      this.users = res.data
+      if (this.users.roleId === 2) {
+        this.getExpertInfo()
+        this.show = false
+      } else {
+        this.getExpertList()
+        this.show = true
+      }
+    },
+    async getExpertInfo() {
+      const { data: res } = await this.$http.get('/commonExpertInfoController/selectById/' + this.users.id)
+      if (res.code !== 200) {
+        return this.$message.error(res.msg)
+      }
+      if (res.data == null) {
+        this.addshow = true
+        return this.$message.error('添加专家信息')
+      }
+      this.expertList = []
+      this.expertList.push(res.data)
     }
   }
 }
